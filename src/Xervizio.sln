@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xervizio", "Xervizio\Xervizio.csproj", "{9B2B70BE-19CC-4748-9BE4-B2F4EAE95DCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xervizio.Host.Standalone", "Xervizio.Host.Standalone\Xervizio.Host.Standalone.csproj", "{7E951842-DA7D-4767-95E3-5E2F1F6AD973}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B2B70BE-19CC-4748-9BE4-B2F4EAE95DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B2B70BE-19CC-4748-9BE4-B2F4EAE95DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B2B70BE-19CC-4748-9BE4-B2F4EAE95DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B2B70BE-19CC-4748-9BE4-B2F4EAE95DCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E951842-DA7D-4767-95E3-5E2F1F6AD973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E951842-DA7D-4767-95E3-5E2F1F6AD973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E951842-DA7D-4767-95E3-5E2F1F6AD973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E951842-DA7D-4767-95E3-5E2F1F6AD973}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
