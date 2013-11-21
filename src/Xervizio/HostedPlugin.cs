@@ -12,26 +12,30 @@ namespace Xervizio {
 
         const string PLUGIN_LOADER_TYPENAME = "Xervizio.Plugins.ServicePluginLoader";
 
-        public HostedPlugin(string name, string absoluteDirectoryPath) {
-            Name = name;
-            ApplicationBase = absoluteDirectoryPath;
+        public HostedPlugin(ServicePluginManifest manifest) {
+            Manifest = manifest; /* new ServicePluginManifest {
+                PluginName = manifest.PluginName,
+                PluginBasePath = manifest.PluginBasePath,
+                AssemblyEntryPointType = manifest.AssemblyEntryPointType,
+                FullAssemblyName = manifest.FullAssemblyName,
+                PluginConfigurationFile = manifest.PluginConfigurationFile
+            };*/
         }
 
-        public string Name { get; private set; }
-        public string ApplicationBase { get; private set; }        
+        public ServicePluginManifest Manifest { get; private set; }
 
         public virtual void Load() {
             if (_appDomain != null) return;
             
             var setup = new AppDomainSetup {
-                ApplicationBase = ApplicationBase,
-                ConfigurationFile = BuildConfigurationFilePath(ApplicationBase)
+                ApplicationBase = Manifest.PluginBasePath,
+                ConfigurationFile = Manifest.PluginConfigurationFile
             };
 
             _appDomain = AppDomain.CreateDomain(
-                Name, null, setup, new PermissionSet(PermissionState.Unrestricted), null);
+                Manifest.PluginName, null, setup, new PermissionSet(PermissionState.Unrestricted), null);
 
-            _servicePlugin = CreatePluginEntryPointInstance(_appDomain, ApplicationBase);
+            _servicePlugin = (IServicePlugin)_appDomain.CreateInstanceAndUnwrap(Manifest.FullAssemblyName, Manifest.AssemblyEntryPointType);
             _servicePlugin.Start();
         }
 
@@ -48,22 +52,7 @@ namespace Xervizio {
             _appDomain = null;
         }
 
-        private ServicePlugin CreatePluginEntryPointInstance(AppDomain pluginDomain, string applicationBase) {
-            string assemblyName = Path.GetDirectoryName(applicationBase);
-            return (ServicePlugin)pluginDomain.CreateInstanceAndUnwrap(assemblyName, PLUGIN_LOADER_TYPENAME);
-        }
-
-        private string BuildConfigurationFilePath(string applicationBase) {
-            var dllConfig = Path.Combine(applicationBase, Name + ".dll.config");
-            if (File.Exists(dllConfig)) return dllConfig;
-
-            var exeConfig = Path.Combine(applicationBase, Name + ".exe.config");
-            if (File.Exists(exeConfig)) return exeConfig;
-
-            return string.Empty;
-        }
-
         private AppDomain _appDomain;
-        private ServicePlugin _servicePlugin;
+        private IServicePlugin _servicePlugin;        
     }
 }

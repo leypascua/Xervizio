@@ -30,9 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Abstractions">
+      <HintPath>..\packages\System.IO.Abstractions.1.4.0.69\lib\net35\System.IO.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,14 +50,26 @@
   <ItemGroup>
     <Compile Include="HostedPlugin.cs" />
     <Compile Include="HostedPluginFactory.cs" />
+    <Compile Include="IsolatedServicePluginCatalog.cs" />
     <Compile Include="ServicePlugin.cs" />
+    <Compile Include="ServicePluginCatalog.cs" />
     <Compile Include="ServicePluginHost.cs" />
+    <Compile Include="ServicePluginManifest.cs" />
+    <Compile Include="Utils\EnumerableExtensions.cs" />
+    <Compile Include="Utils\ExpressionExtensions.cs" />
     <Compile Include="Utils\ILogger.cs" />
+    <Compile Include="Utils\InstanceHelper.cs" />
     <Compile Include="Utils\ObjectExtensions.cs" />
     <Compile Include="Configuration\XervizioConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Protect.cs" />
+    <Compile Include="Utils\ResourceHelper.cs" />
+    <Compile Include="Utils\StringExtensions.cs" />
+    <Compile Include="Utils\TypeExtensions.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

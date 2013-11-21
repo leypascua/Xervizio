@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Text;
 
 namespace Xervizio {
-    public class HostedPluginFactory {
-        private string _pluginPath;
+    using Utils;
 
-        public HostedPluginFactory(string pluginPath) {
-            _pluginPath = pluginPath;
+    public class HostedPluginFactory {        
+        private ServicePluginCatalogFactory _catalogFactory;
+        private ILogger _logger;        
+
+        public HostedPluginFactory(ServicePluginCatalogFactory catalogFactory, ILogger logger) {            
+            _catalogFactory = catalogFactory;
+            _logger = logger;
         }
 
-        public virtual IEnumerable<HostedPlugin> GetPlugins() {
-            // ensure that plugin folder exists.
-
-            // foreach folder in the plugins folder...
-            //      if folder is valid (an assembly having the folder name as it's name) 
-            //      create a HostedPlugin instance.
-           
-            yield break;
+        public virtual IEnumerable<HostedPlugin> GetPlugins(string pluginsPath) {
+            using (var catalog = _catalogFactory.CreateCatalog(pluginsPath, _logger)) {
+                return catalog
+                    .GetPluginManifests()
+                    .Select(manifest => new HostedPlugin(manifest));
+            }
         }
         
     }

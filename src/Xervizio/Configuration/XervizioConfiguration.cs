@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Configuration;
+using System.IO;
 
 namespace Xervizio.Configuration {
     public interface XervizioConfiguration {
@@ -11,6 +12,13 @@ namespace Xervizio.Configuration {
         string ServiceDescription { get; set; }
         string PluginLocation { get; set; }
     }
+
+    public static class XervizioConfigurationExtensions {
+        public static string GetPluginsPath(this XervizioConfiguration config) {
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, config.PluginLocation);
+        }
+    }
+
 
     public abstract class XervizioConfigurationContext {
 
@@ -70,6 +78,7 @@ namespace Xervizio.Configuration {
             }
         }
 
+        [ConfigurationProperty(PLUGINLOCATION_CONFIGKEY, DefaultValue = "Plugins")]
         public string PluginLocation {
             get {
                 return base[PLUGINLOCATION_CONFIGKEY].GetValueOrDefault<string>();

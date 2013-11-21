@@ -20,12 +20,15 @@ namespace Xervizio {
 
         public virtual void Start() {
             // locate and enumerate plugins from plugin directory
-            IEnumerable<HostedPlugin> plugins = _pluginFactory.GetPlugins().ToList();
+            var plugins = _pluginFactory.GetPlugins(_configuration.GetPluginsPath()).ToList();
+
+            _logger.Info("Found {0} plugins.", plugins.Count);
 
             foreach (var plugin in plugins) {
-                if (_validPlugins.ContainsKey(plugin.Name)) continue;
+                if (_validPlugins.ContainsKey(plugin.Manifest.PluginName)) continue;
+                _logger.Info("Now loading {0}", plugin);
                 plugin.Load();
-                _validPlugins.Add(plugin.Name, plugin);
+                _validPlugins.Add(plugin.Manifest.PluginName, plugin);
             }
         }
 
