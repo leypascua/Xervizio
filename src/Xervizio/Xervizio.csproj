@@ -53,6 +53,8 @@
     <Compile Include="IsolatedServicePluginCatalog.cs" />
     <Compile Include="ServicePlugin.cs" />
     <Compile Include="ServicePluginCatalog.cs" />
+    <Compile Include="ServicePluginLoadingException.cs" />
+    <Compile Include="ServicePluginInstanceManager.cs" />
     <Compile Include="ServicePluginHost.cs" />
     <Compile Include="ServicePluginManifest.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />

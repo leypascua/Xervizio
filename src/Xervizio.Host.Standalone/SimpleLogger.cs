@@ -22,6 +22,10 @@ namespace Xervizio.Host.Standalone {
             _logger.Warn(FormatString(message, args));
         }
 
+        public void Error(Exception error) {
+            _logger.Error(error.ToString());
+        }
+
         public void Error(string message, params object[] args) {
             _logger.Error(FormatString(message, args));
         }

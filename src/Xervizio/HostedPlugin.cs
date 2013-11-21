@@ -12,31 +12,20 @@ namespace Xervizio {
 
         const string PLUGIN_LOADER_TYPENAME = "Xervizio.Plugins.ServicePluginLoader";
 
-        public HostedPlugin(ServicePluginManifest manifest) {
-            Manifest = manifest; /* new ServicePluginManifest {
-                PluginName = manifest.PluginName,
-                PluginBasePath = manifest.PluginBasePath,
-                AssemblyEntryPointType = manifest.AssemblyEntryPointType,
-                FullAssemblyName = manifest.FullAssemblyName,
-                PluginConfigurationFile = manifest.PluginConfigurationFile
-            };*/
+        public HostedPlugin(ServicePluginInstanceManager pluginManager) {
+            PluginManager = pluginManager;
         }
 
-        public ServicePluginManifest Manifest { get; private set; }
+        public ServicePluginInstanceManager PluginManager { get; private set; }
 
         public virtual void Load() {
-            if (_appDomain != null) return;
-            
-            var setup = new AppDomainSetup {
-                ApplicationBase = Manifest.PluginBasePath,
-                ConfigurationFile = Manifest.PluginConfigurationFile
-            };
-
-            _appDomain = AppDomain.CreateDomain(
-                Manifest.PluginName, null, setup, new PermissionSet(PermissionState.Unrestricted), null);
-
-            _servicePlugin = (IServicePlugin)_appDomain.CreateInstanceAndUnwrap(Manifest.FullAssemblyName, Manifest.AssemblyEntryPointType);
-            _servicePlugin.Start();
+            try {
+                PluginManager.GetInstance().Start();
+            }
+            catch (Exception ex) {
+                Unload();
+                throw new ServicePluginLoadingException(ex);
+            }
         }
 
         public virtual void Restart() {
@@ -45,14 +34,7 @@ namespace Xervizio {
         }
 
         public virtual void Unload() {
-            if (_appDomain == null) return;
-            _servicePlugin.Stop();
-            _servicePlugin = null;
-            AppDomain.Unload(_appDomain);            
-            _appDomain = null;
+            PluginManager.UnloadInstance();
         }
-
-        private AppDomain _appDomain;
-        private IServicePlugin _servicePlugin;        
     }
 }

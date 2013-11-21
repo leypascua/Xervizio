@@ -25,10 +25,16 @@ namespace Xervizio {
             _logger.Info("Found {0} plugins.", plugins.Count);
 
             foreach (var plugin in plugins) {
-                if (_validPlugins.ContainsKey(plugin.Manifest.PluginName)) continue;
+                if (_validPlugins.ContainsKey(plugin.PluginManager.Manifest.PluginName)) continue;
                 _logger.Info("Now loading {0}", plugin);
-                plugin.Load();
-                _validPlugins.Add(plugin.Manifest.PluginName, plugin);
+
+                try {
+                    plugin.Load();
+                    _validPlugins.Add(plugin.PluginManager.Manifest.PluginName, plugin);
+                }
+                catch (ServicePluginLoadingException ex) {
+                    _logger.Error(ex);
+                }
             }
         }
 

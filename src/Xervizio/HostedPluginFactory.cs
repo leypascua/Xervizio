@@ -20,7 +20,7 @@ namespace Xervizio {
             using (var catalog = _catalogFactory.CreateCatalog(pluginsPath, _logger)) {
                 return catalog
                     .GetPluginManifests()
-                    .Select(manifest => new HostedPlugin(manifest));
+                    .Select(manifest => new HostedPlugin(new ServicePluginInstanceManager(manifest)));
             }
         }
         
