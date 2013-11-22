@@ -10,24 +10,27 @@ namespace Xervizio {
     using Utils;
     using Configuration;
 
-    public abstract class ServicePluginCatalogFactory {
+    public interface IServicePluginCatalogFactory {
+        IServicePluginCatalog CreateCatalog(string pluginsPath, ILogger logger);
+    }
 
-        public static Func<ServicePluginCatalogFactory> CreateInstance = () => new DefaultServicePluginCatalogFactory();
+    public class ServicePluginCatalogFactory : IServicePluginCatalogFactory {
 
-        public abstract IServicePluginCatalog CreateCatalog(string pluginsPath, ILogger logger);
+        public static Func<IServicePluginCatalogFactory> CreateInstance = () => new IsolatedServicePluginCatalogFactory(); // new ServicePluginCatalogFactory(); //
 
-        class DefaultServicePluginCatalogFactory : ServicePluginCatalogFactory {
-            public override IServicePluginCatalog CreateCatalog(string pluginsPath, ILogger logger) {
-                return new ServicePluginCatalog(pluginsPath, new FileSystem(), logger);
-            }
+        private ServicePluginCatalogFactory() { }
+
+        public virtual IServicePluginCatalog CreateCatalog(string pluginsPath, ILogger logger) {
+            return new ServicePluginCatalog(pluginsPath, new FileSystem(), logger);
         }
     }
 
     public interface IServicePluginCatalog : IDisposable {
-        IEnumerable<ServicePluginManifest> GetPluginManifests();
+        ServicePluginManifest[] GetPluginManifests();
     }
-
-    public class ServicePluginCatalog : IServicePluginCatalog {
+    
+    [Serializable]
+    public class ServicePluginCatalog : MarshalByRefObject, IServicePluginCatalog {
         private readonly string _pluginsPath;
         private readonly FileSystem _fileSystem;
         private readonly ILogger _logger;
@@ -38,9 +41,10 @@ namespace Xervizio {
             _logger = logger;
         }
 
-        public virtual IEnumerable<ServicePluginManifest> GetPluginManifests() {
+        public virtual ServicePluginManifest[] GetPluginManifests() {
             EnsurePluginsPathExist(_pluginsPath);
             IEnumerable<string> possiblePluginDirectories = _fileSystem.Directory.GetDirectories(_pluginsPath);
+            var results = new List<ServicePluginManifest>();
 
             foreach (var candidate in possiblePluginDirectories) {
                 string pluginName = _fileSystem.DirectoryInfo.FromDirectoryName(candidate).Name;
@@ -51,11 +55,15 @@ namespace Xervizio {
                     continue;
                 }
 
-                yield return manifest;
+                results.Add(manifest);
             }
+
+            return results.ToArray();
         }
-        
-        private ServicePluginManifest NewPluginManifest(string pluginPath, string pluginName) {            
+
+        public virtual void Dispose() { }
+
+        protected virtual ServicePluginManifest NewPluginManifest(string pluginPath, string pluginName) {            
             
             try {
                 string pluginEntryPoint = "{0}.dll".WithTokens(pluginName);
@@ -86,7 +94,5 @@ namespace Xervizio {
                 _fileSystem.Directory.CreateDirectory(pluginsPath);
             }
         }
-
-        public virtual void Dispose() {}
     }
 }

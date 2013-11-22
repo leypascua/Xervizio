@@ -8,10 +8,10 @@ namespace Xervizio {
     using Utils;
 
     public class HostedPluginFactory {        
-        private ServicePluginCatalogFactory _catalogFactory;
+        private IServicePluginCatalogFactory _catalogFactory;
         private ILogger _logger;        
 
-        public HostedPluginFactory(ServicePluginCatalogFactory catalogFactory, ILogger logger) {            
+        public HostedPluginFactory(IServicePluginCatalogFactory catalogFactory, ILogger logger) {            
             _catalogFactory = catalogFactory;
             _logger = logger;
         }
@@ -19,7 +19,7 @@ namespace Xervizio {
         public virtual IEnumerable<HostedPlugin> GetPlugins(string pluginsPath) {
             using (var catalog = _catalogFactory.CreateCatalog(pluginsPath, _logger)) {
                 return catalog
-                    .GetPluginManifests()
+                    .GetPluginManifests()                    
                     .Select(manifest => new HostedPlugin(new ServicePluginInstanceManager(manifest)));
             }
         }

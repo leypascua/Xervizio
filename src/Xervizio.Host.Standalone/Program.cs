@@ -13,6 +13,8 @@ namespace Xervizio.Host.Standalone {
     class Program {
 
         static void Main(string[] args) {
+            Banner();
+            
             XervizioConfiguration config = XervizioConfigurationContext.Current.Settings;
             ILogger logger = new SimpleLogger();
             
@@ -33,6 +35,12 @@ namespace Xervizio.Host.Standalone {
             var servicePluginCatalogFactory = ServicePluginCatalogFactory.CreateInstance();
             var pluginFactory = new HostedPluginFactory(servicePluginCatalogFactory, logger);
             return new ServicePluginHost(config, logger, pluginFactory);
+        }
+
+        static void Banner() {
+            Console.WriteLine("Xervizio Stand-alone Service Host");
+            Console.WriteLine("Originally developed by leypascua®. Contributions are welcome.");
+            Console.WriteLine();
         }
     }
 }

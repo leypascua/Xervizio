@@ -8,8 +8,10 @@ namespace Xervizio {
 
     public enum ServicePluginState {
         Stopped = 0,
-        Busy = 1,
-        Idle = 2
+        Starting = 1,
+        Idle = 2,
+        Busy = 3,
+        Stopping = 4 
     }
 
     [InheritedExport]

@@ -6,10 +6,11 @@ using System.Threading;
 using System.Timers;
 using Xervizio;
 using System.ComponentModel.Composition;
+using System.Configuration;    
 
-namespace TestPlugin {
+
+namespace TestPlugin {    
     using System.Timers;
-    using System.Configuration;    
 
     public class TimerServicePlugin : ServicePlugin {
         private Timer _timer;
@@ -36,7 +37,7 @@ namespace TestPlugin {
         }
 
         void OnTimerElapsed(object sender, ElapsedEventArgs e) {
-            Console.WriteLine(ConfigurationManager.AppSettings["message"]);
+            Console.WriteLine(ConfigurationManager.AppSettings["message"] ?? "hoy");
         }
     }
 }

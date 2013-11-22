@@ -6,43 +6,28 @@ using System.Security.Permissions;
 using System.Text;
 
 namespace Xervizio {
-    public class ServicePluginInstanceManager {        
-        private AppDomain _appDomain;
-        private IServicePlugin _servicePlugin;
+    public class ServicePluginInstanceManager {
+        private IsolatedInstanceManager _instanceManager;        
 
         public ServicePluginInstanceManager(ServicePluginManifest manifest) {
             Manifest = manifest;
+            _instanceManager = new IsolatedInstanceManager(new IsolatedInstanceManagerSetup {
+              ApplicationBase = manifest.PluginBasePath,
+              ConfigurationFile = manifest.PluginConfigurationFile,
+              FriendlyName = manifest.PluginName,
+              FullAssemblyName = manifest.FullAssemblyName,
+              AssemblyEntryPointType = manifest.AssemblyEntryPointType,
+            });
         }
-
+        
         public ServicePluginManifest Manifest { get; private set; }
 
         public virtual IServicePlugin GetInstance() {
-            if (_appDomain != null && _servicePlugin != null) return _servicePlugin;
-
-            UnloadInstance();
-
-            var setup = new AppDomainSetup {
-                ApplicationBase = Manifest.PluginBasePath,
-                ConfigurationFile = Manifest.PluginConfigurationFile
-            };
-
-            _appDomain = AppDomain.CreateDomain(
-                Manifest.PluginName, null, setup, new PermissionSet(PermissionState.Unrestricted), null);
-
-            _servicePlugin = (IServicePlugin)_appDomain.CreateInstanceAndUnwrap(Manifest.FullAssemblyName, Manifest.AssemblyEntryPointType);
-            return _servicePlugin;
+            return _instanceManager.GetInstance<IServicePlugin>();
         }
 
         public virtual void UnloadInstance() {
-            if (_servicePlugin != null) {
-                var disposable = _servicePlugin as IDisposable;
-                if (disposable.Exists()) disposable.Dispose();                
-                _servicePlugin = null;
-            }
-            if (_appDomain != null) {
-                AppDomain.Unload(_appDomain);
-                _appDomain = null;
-            }
+            _instanceManager.UnloadInstance();
         }
 
     }

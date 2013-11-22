@@ -11,6 +11,8 @@
     <AssemblyName>Xervizio</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,6 +52,7 @@
   <ItemGroup>
     <Compile Include="HostedPlugin.cs" />
     <Compile Include="HostedPluginFactory.cs" />
+    <Compile Include="IsolatedInstanceManager.cs" />
     <Compile Include="IsolatedServicePluginCatalog.cs" />
     <Compile Include="ServicePlugin.cs" />
     <Compile Include="ServicePluginCatalog.cs" />
@@ -59,6 +62,7 @@
     <Compile Include="ServicePluginManifest.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Utils\ExpressionExtensions.cs" />
+    <Compile Include="Utils\GenericCodeGenerator.cs" />
     <Compile Include="Utils\ILogger.cs" />
     <Compile Include="Utils\InstanceHelper.cs" />
     <Compile Include="Utils\ObjectExtensions.cs" />
@@ -73,6 +77,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

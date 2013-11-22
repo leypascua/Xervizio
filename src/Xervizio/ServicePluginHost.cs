@@ -22,7 +22,7 @@ namespace Xervizio {
             // locate and enumerate plugins from plugin directory
             var plugins = _pluginFactory.GetPlugins(_configuration.GetPluginsPath()).ToList();
 
-            _logger.Info("Found {0} plugins.", plugins.Count);
+            _logger.Info("Found {0} plugin(s).", plugins.Count);
 
             foreach (var plugin in plugins) {
                 if (_validPlugins.ContainsKey(plugin.PluginManager.Manifest.PluginName)) continue;
@@ -46,6 +46,7 @@ namespace Xervizio {
                 plugin.Unload();
                 _validPlugins.Remove(key);
                 plugin = null;
+                _logger.Info("Unloaded plugin: {0}", key);
             }
         }
 
