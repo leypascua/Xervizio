@@ -62,7 +62,6 @@
     <Compile Include="ServicePluginManifest.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Utils\ExpressionExtensions.cs" />
-    <Compile Include="Utils\GenericCodeGenerator.cs" />
     <Compile Include="Utils\ILogger.cs" />
     <Compile Include="Utils\InstanceHelper.cs" />
     <Compile Include="Utils\ObjectExtensions.cs" />
