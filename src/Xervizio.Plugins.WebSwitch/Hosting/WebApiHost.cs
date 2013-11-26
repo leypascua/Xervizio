@@ -16,11 +16,20 @@ namespace Xervizio.Plugins.WebSwitch.Hosting {
 
         public virtual void Start() {
             var config = new HttpSelfHostConfiguration(_baseAddress);
+
             config.Routes.MapHttpRoute(
-                name: "WebApiHost",
+                name: "ActionApis",
+                routeTemplate: "api/host/{action}",
+                defaults: new { controller = "host", action = "DefaultAction"}
+            );
+            
+            config.Routes.MapHttpRoute(
+                name: "Default",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { controller = "", id = RouteParameter.Optional }
             );
+
+
 
             var server =new HttpSelfHostServer(config);
             server.OpenAsync().Wait();

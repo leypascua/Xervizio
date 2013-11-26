@@ -68,6 +68,7 @@
     <Compile Include="Hosting\WebApiHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceHostContext.cs" />
+    <Compile Include="Services\HostController.cs" />
     <Compile Include="Services\PluginsController.cs" />
     <Compile Include="WebSwitchPlugin.cs" />
   </ItemGroup>

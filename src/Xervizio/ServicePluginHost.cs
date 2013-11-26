@@ -7,6 +7,7 @@ namespace Xervizio {
     using Configuration;
     using Utils;
     using Data;
+    using System.Threading;
 
     public interface ServicePluginHost {
         ILogger Logger { get; }
@@ -26,11 +27,11 @@ namespace Xervizio {
 
         public static ServicePluginHost Current { get; private set; }
 
-        public static ServicePluginHost Bootstrap(XervizioConfiguration config, ILogger logger, HostedPluginFactory pluginFactory) {
+        public static ServicePluginHost Bootstrap(XervizioConfiguration config, ILogger logger, HostedPluginFactory pluginFactory, Action shutdownHost) {
             if (Current.IsNull()) {
                 lock (_syncLock) {
                     if (Current.IsNull()) {
-                        Current = new ServicePluginHostContext(config, logger, pluginFactory);
+                        Current = new ServicePluginHostContext(config, logger, pluginFactory, shutdownHost);
                     }
                 }
             }
@@ -38,10 +39,11 @@ namespace Xervizio {
             return Current;
         }
 
-        private ServicePluginHostContext(XervizioConfiguration config, ILogger logger, HostedPluginFactory pluginFactory) {            
+        private ServicePluginHostContext(XervizioConfiguration config, ILogger logger, HostedPluginFactory pluginFactory, Action shutdownHost) {            
             _configuration = config;
             _logger = logger;
             _pluginFactory = pluginFactory;
+            _shutdownHost = shutdownHost;
         }
 
         ILogger ServicePluginHost.Logger {
@@ -89,12 +91,24 @@ namespace Xervizio {
         }
 
         void ServicePluginHost.Shutdown() {
+            Action performShutdown = () => {
+                _logger.Warn("Commencing shutdown in 5 seconds");
+                Thread.Sleep(5000);
+                ShutdownCompletely();
+            };
+
+            performShutdown.BeginInvoke(new AsyncCallback(ar => {}), null);
+        }
+
+        private void ShutdownCompletely() {
             var keys = _validPlugins.Keys.ToList();
-            
+
             foreach (string key in keys) {
                 var plugin = _validPlugins[key];
                 StopPlugin(plugin);
             }
+
+            _shutdownHost();
         }
 
         private void StartPlugin(HostedPlugin plugin, bool throwOnError = false) {
@@ -124,5 +138,6 @@ namespace Xervizio {
         }
 
         private IDictionary<string, HostedPlugin> _validPlugins = new Dictionary<string, HostedPlugin>();
+        private Action _shutdownHost;
     }
 }

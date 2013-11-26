@@ -14,10 +14,10 @@ namespace Xervizio.Host.Standalone {
 
         static void Main(string[] args) {
             Banner();
-            
+
             XervizioConfiguration config = XervizioConfigurationContext.Current.Settings;
             ILogger logger = new SimpleLogger();
-            
+
             HostFactory.Run(host => {
                 host.Service<ServicePluginHost>(s => {
                     s.ConstructUsing(name => CreatePluginHost(config, logger));
@@ -34,7 +34,8 @@ namespace Xervizio.Host.Standalone {
         static ServicePluginHost CreatePluginHost(XervizioConfiguration config, ILogger logger) {
             var servicePluginCatalogFactory = ServicePluginCatalogFactory.CreateInstance();
             var pluginFactory = new HostedPluginFactory(() => ServicePluginHostContext.Current, servicePluginCatalogFactory, logger, config.GetPluginsPath());
-            return ServicePluginHostContext.Bootstrap(config, logger, pluginFactory);
+            Action shutdownHost = () => Environment.Exit(0);
+            return ServicePluginHostContext.Bootstrap(config, logger, pluginFactory, shutdownHost);
         }
 
         static void Banner() {
