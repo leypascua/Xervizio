@@ -12,15 +12,24 @@ namespace Xervizio {
 
         const string PLUGIN_LOADER_TYPENAME = "Xervizio.Plugins.ServicePluginLoader";
 
-        public HostedPlugin(ServicePluginInstanceManager pluginManager) {
+        public HostedPlugin(ServicePluginInstanceManager pluginManager, ServicePluginHost host) {
             PluginManager = pluginManager;
+            Host = host;
         }
 
         public ServicePluginInstanceManager PluginManager { get; private set; }
+        public ServicePluginHost Host { get; private set; }
 
         public virtual void Load() {
             try {
-                PluginManager.GetInstance().Start();
+                var serviceInstance = PluginManager.GetInstance();                
+
+                var hostGateway = serviceInstance as HostGateway;
+                if (hostGateway.Exists()) {
+                    hostGateway.HostContext = Host;
+                }
+
+                serviceInstance.Start();
             }
             catch (Exception ex) {
                 Unload();

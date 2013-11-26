@@ -33,8 +33,8 @@ namespace Xervizio.Host.Standalone {
 
         static ServicePluginHost CreatePluginHost(XervizioConfiguration config, ILogger logger) {
             var servicePluginCatalogFactory = ServicePluginCatalogFactory.CreateInstance();
-            var pluginFactory = new HostedPluginFactory(servicePluginCatalogFactory, logger);
-            return new ServicePluginHost(config, logger, pluginFactory);
+            var pluginFactory = new HostedPluginFactory(() => ServicePluginHostContext.Current, servicePluginCatalogFactory, logger, config.GetPluginsPath());
+            return ServicePluginHostContext.Bootstrap(config, logger, pluginFactory);
         }
 
         static void Banner() {

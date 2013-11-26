@@ -6,6 +6,7 @@ using System.Text;
 namespace Xervizio {
     public class ServicePluginLoadingException : Exception {
         const string DEFAULT_MESSAGE = "Unable to load service plugin.";
+        public ServicePluginLoadingException(string message) : base(message) { }
         public ServicePluginLoadingException(Exception ex) : base(DEFAULT_MESSAGE, ex) { }
     }
 }

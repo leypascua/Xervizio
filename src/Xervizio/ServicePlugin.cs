@@ -20,10 +20,14 @@ namespace Xervizio {
         void Start();
         void Stop();
     }
-    
+        
     public abstract class ServicePlugin : MarshalByRefObject, IServicePlugin {
         public abstract void Start();
         public abstract void Stop();
         public abstract ServicePluginState GetState();
+    }
+
+    public abstract class HostGateway : ServicePlugin {
+        public virtual ServicePluginHost HostContext { get; internal set; }
     }
 }
