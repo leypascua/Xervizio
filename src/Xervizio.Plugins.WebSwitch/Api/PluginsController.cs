@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using Xervizio.Data;
+using Xervizio.Plugins.WebSwitch.Commands;
+using Xervizio.Plugins.WebSwitch.Infrastructure;
 
 namespace Xervizio.Plugins.WebSwitch.Api {
         
@@ -31,13 +33,15 @@ namespace Xervizio.Plugins.WebSwitch.Api {
         }
 
         [HttpPost]        
-        public virtual HttpResponseMessage Stop(PluginCommand cmd) {
-            return HandleCommand(() => _pluginHost.StopPlugin(cmd.PluginName));
+        public virtual HttpResponseMessage Stop(StopPluginCommand cmd) {
+            var command = CommandRegistry.GetCommandProcesor(cmd);
+            return HandleCommand(() => command.Execute());
         }
 
         [HttpPost]
-        public virtual HttpResponseMessage Start(PluginCommand cmd) {
-            return HandleCommand(() => _pluginHost.StartPlugin(cmd.PluginName));
+        public virtual HttpResponseMessage Start(StartPluginCommand cmd) {
+            var command = CommandRegistry.GetCommandProcesor(cmd);
+            return HandleCommand(() => command.Execute());
         }
 
         private HttpResponseMessage HandleCommand(Action callback) {
@@ -52,9 +56,5 @@ namespace Xervizio.Plugins.WebSwitch.Api {
 
             return new HttpResponseMessage();
         }
-    }
-
-    public class PluginCommand {
-        public string PluginName { get; set; }
     }
 }

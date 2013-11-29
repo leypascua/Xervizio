@@ -23,6 +23,8 @@ namespace Xervizio.Plugins.WebSwitch {
 
         private static void RegisterCommands(ServicePluginHost host) {
             CommandRegistry.Register(() => new ShutdownHostCommandProcessor(host));
+            CommandRegistry.Register(() => new StartPluginCommandProcessor(host));
+            CommandRegistry.Register(() => new StopPluginCommandProcessor(host));
         }
 
         private void StartApiServer() {

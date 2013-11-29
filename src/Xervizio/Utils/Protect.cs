@@ -6,9 +6,8 @@ using System.Text;
 
 namespace Xervizio {
 
-#if !DEBUG
+
     [DebuggerStepThrough]
-#endif
     public static class Protect {
         
         public static void Against<TException>(bool condition, string message, params object[] args) where TException : Exception {

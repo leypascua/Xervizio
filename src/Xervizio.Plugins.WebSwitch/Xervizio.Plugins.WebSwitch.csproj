@@ -66,10 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandProcessors\ShutdownHostCommandProcessor.cs" />
+    <Compile Include="CommandProcessors\StartPluginCommandProcessor.cs" />
+    <Compile Include="CommandProcessors\StopPluginCommandProcessor.cs" />
     <Compile Include="Commands\ShutdownHostCommand.cs" />
+    <Compile Include="Commands\PluginCommands.cs" />
     <Compile Include="Hosting\WebApiHost.cs" />
     <Compile Include="Infrastructure\ApplicationCommand.cs" />
     <Compile Include="Infrastructure\CommandEnvelope.cs" />
+    <Compile Include="Infrastructure\CommandProcessorProxy.cs" />
     <Compile Include="Infrastructure\CommandRegistry.cs" />
     <Compile Include="Infrastructure\ICommandProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
