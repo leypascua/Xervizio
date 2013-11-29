@@ -112,11 +112,17 @@ namespace Xervizio {
         }
 
         private void StartPlugin(HostedPlugin plugin, bool throwOnError = false) {
-            _logger.Info("Now loading {0}", plugin);
+            string pluginName = plugin.PluginManager.Manifest.PluginName;
+            _logger.Info("Now loading {0}", pluginName);
+
+            if (_validPlugins.ContainsKey(pluginName)) {
+                _logger.Info("Plugin {0} is already loaded.", pluginName);
+                return;
+            }
 
             try {
                 plugin.Load();
-                _validPlugins.Add(plugin.PluginManager.Manifest.PluginName, plugin);
+                _validPlugins.Add(pluginName, plugin);
             }
             catch (ServicePluginLoadingException ex) {
                 _logger.Error(ex);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,27 +31,26 @@ namespace Xervizio.Plugins.WebSwitch.Services {
         }
 
         [HttpPost]        
-        public virtual bool Stop(PluginCommand cmd) {            
-            try {
-                _pluginHost.StopPlugin(cmd.PluginName);
-            }
-            catch {
-                return false; 
-            }
-
-            return true;
+        public virtual HttpResponseMessage Stop(PluginCommand cmd) {
+            return HandleCommand(() => _pluginHost.StopPlugin(cmd.PluginName));
         }
 
         [HttpPost]
-        public virtual bool Start(PluginCommand cmd) {
+        public virtual HttpResponseMessage Start(PluginCommand cmd) {
+            return HandleCommand(() => _pluginHost.StartPlugin(cmd.PluginName));
+        }
+
+        private HttpResponseMessage HandleCommand(Action callback) {
             try {
-                _pluginHost.StartPlugin(cmd.PluginName);
+                callback();
             }
-            catch {
-                return false;
+            catch (Exception ex) {
+                var msg = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                msg.ReasonPhrase = ex.Message;
+                return msg;
             }
 
-            return true;
+            return new HttpResponseMessage();
         }
     }
 
