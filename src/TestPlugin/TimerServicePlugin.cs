@@ -37,7 +37,7 @@ namespace TestPlugin {
         }
 
         void OnTimerElapsed(object sender, ElapsedEventArgs e) {
-            Console.WriteLine(ConfigurationManager.AppSettings["message"] ?? "hoy");
+            System.Diagnostics.Debug.WriteLine(ConfigurationManager.AppSettings["message"] ?? "hoy");
         }
     }
 }
