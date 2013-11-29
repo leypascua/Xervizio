@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Web.Http;
+using Xervizio.Plugins.WebSwitch.Commands;
+using Xervizio.Plugins.WebSwitch.Infrastructure;
 
-namespace Xervizio.Plugins.WebSwitch.Services {
+namespace Xervizio.Plugins.WebSwitch.Api {
     public class HostController : ApiController {
         private ServicePluginHost _host;
 
@@ -24,8 +26,9 @@ namespace Xervizio.Plugins.WebSwitch.Services {
 
         [HttpPost]
         [ActionName("Shutdown")]
-        public bool Shutdown() {            
-            _host.Shutdown();
+        public bool Shutdown() {
+            var processor = CommandRegistry.GetCommandProcesor(new ShutdownHostCommand());
+            processor.Execute();
             return true;
         }
     }

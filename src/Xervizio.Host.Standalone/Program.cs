@@ -40,7 +40,7 @@ namespace Xervizio.Host.Standalone {
 
         static void Banner() {
             Console.WriteLine("Xervizio Stand-alone Service Host");
-            Console.WriteLine("Originally developed by leypascua®. Contributions are welcome.");
+            Console.WriteLine("Originally developed by leypascua. Contributions are welcome.");
             Console.WriteLine();
         }
     }

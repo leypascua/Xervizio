@@ -7,6 +7,8 @@ using Xervizio;
 
 namespace Xervizio.Plugins.WebSwitch {
     using Hosting;
+    using Infrastructure;
+    using Xervizio.Plugins.WebSwitch.CommandProcessors;
 
     public class WebSwitchPlugin : HostGateway {
         private WebApiHost _host;
@@ -15,6 +17,16 @@ namespace Xervizio.Plugins.WebSwitch {
 
         public override void Start() {
             ServiceHostContext.Bootstrap(base.HostContext);
+            RegisterCommands(base.HostContext);
+            StartApiServer();
+        }
+
+        private static void RegisterCommands(ServicePluginHost host) {
+            CommandRegistry.Register(() => new ShutdownHostCommandProcessor(host));
+        }
+
+        private void StartApiServer() {
+            
             string baseAddress = ConfigurationManager.AppSettings["baseAddress"];
             _host = new WebApiHost(baseAddress);
             _host.Start();

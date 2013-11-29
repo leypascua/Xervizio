@@ -9,7 +9,7 @@ using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using Xervizio.Data;
 
-namespace Xervizio.Plugins.WebSwitch.Services {
+namespace Xervizio.Plugins.WebSwitch.Api {
         
     public class PluginsController : ApiController {
         private ServicePluginHost _pluginHost;
