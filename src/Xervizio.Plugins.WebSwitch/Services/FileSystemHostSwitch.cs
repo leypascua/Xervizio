@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Xervizio.Plugins.WebSwitch.Api;
 using Xervizio.Plugins.WebSwitch.Commands;
 using Xervizio.Plugins.WebSwitch.Infrastructure;
@@ -26,6 +27,8 @@ namespace Xervizio.Plugins.WebSwitch.Services {
         }
 
         private void ExecuteCommand(string requestPath) {
+            Thread.Sleep(200);
+
             // deserialize file            
             var envelope = CommandEnvelope.BuildFrom(File.ReadAllText(requestPath));
             ApplicationCommand response = new SuccessfulExecutionResponseCommand();

@@ -60,10 +60,7 @@ namespace Xervizio.Plugins.WebSwitch.Services {
         }
 
         private void SerializeAndSend(CommandEnvelope envelope, string requestFilePath) {
-            using (var fs = File.CreateText(requestFilePath)) {
-                fs.Write(envelope.ToJson());
-                fs.Flush();
-            }
+            File.WriteAllText(requestFilePath, envelope.ToJson());
         }
 
         private void DeserializeResponse(string responseFilePath, ApplicationCommand command) {
