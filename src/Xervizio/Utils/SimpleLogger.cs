@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using log4net;
 
-namespace Xervizio.Host.Standalone {
-    using System.Reflection;
-    using log4net;
-    using Utils;
-
+namespace Xervizio.Utils {
     public class SimpleLogger : MarshalByRefObject, ILogger {
 
         static SimpleLogger() {
