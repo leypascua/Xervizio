@@ -14,9 +14,11 @@ namespace Xervizio.Plugins.WebSwitch.Infrastructure {
 
         public static CommandProcessorProxy GetCommandProcesor(ApplicationCommand command) {
             Type commandType = command.GetType();
-            return _registry.ContainsKey(commandType) ? 
-                new CommandProcessorProxy(_registry[commandType](), command) : 
-                null;
+
+            Protect.AgainstInvalidOperation(!_registry.ContainsKey(commandType),
+                "An ICommandProcessor for {0} cannot be found or was not registered.", commandType.FullName);
+
+            return new CommandProcessorProxy(_registry[commandType](), command);
         }
 
         static Dictionary<Type, Func<CommandProcessor>> _registry = new Dictionary<Type, Func<CommandProcessor>>();

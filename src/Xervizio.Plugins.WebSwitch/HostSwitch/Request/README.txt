@@ -1,0 +1,1 @@
+﻿This folder contains serialized requests to execute commands via the command line

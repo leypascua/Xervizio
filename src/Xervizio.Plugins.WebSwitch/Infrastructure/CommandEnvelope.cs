@@ -6,6 +6,18 @@ using Xervizio.Utils;
 
 namespace Xervizio.Plugins.WebSwitch.Infrastructure {
     public class CommandEnvelope {
+
+        public static CommandEnvelope BuildFrom(string json) {
+            return json.DeserializeFromJsonAs<CommandEnvelope>();
+        }
+
+        public CommandEnvelope() { }
+
+        public CommandEnvelope(ApplicationCommand command) {
+            CommandTypeFullName = command.GetType().ToQualifiedAssemblyName();
+            CommandJson = command.ToJson();
+        }
+
         public string CommandTypeFullName { get; set; }
         public string CommandJson { get; set; }
 

@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Xervizio.Plugins.WebSwitch.Api;
+using Xervizio.Plugins.WebSwitch.Commands;
+using Xervizio.Plugins.WebSwitch.Infrastructure;
 
 namespace Xervizio.Plugins.WebSwitch.Services {
     public class FileSystemHostSwitch {
@@ -16,35 +18,64 @@ namespace Xervizio.Plugins.WebSwitch.Services {
         }
 
         public FileSystemHostSwitch Start() {
-            Reset();
-            _fsw.Filter = "*.xvzo";
-            _fsw.Created += OnRequestReceived;
+            Reset(_config.BuildHostedRequestPath(), _config.BuildHostedResponsePath());
+            _fsw.Filter = "*{0}".WithTokens(FileSystemHostSwitchClient.REQUEST_EXTENSION_FILENAME);
+            _fsw.Created += (sender, args) => ExecuteCommand(args.FullPath);
             _fsw.EnableRaisingEvents = true;
             return this;
         }
 
-        void OnRequestReceived(object sender, FileSystemEventArgs e) {
-            // deserialize file
+        private void ExecuteCommand(string requestPath) {
+            // deserialize file            
+            var envelope = CommandEnvelope.BuildFrom(File.ReadAllText(requestPath));
+            ApplicationCommand response = new SuccessfulExecutionResponseCommand();
 
             // execute the command
+            try {
+                var processor = CommandRegistry.GetCommandProcesor(envelope.GetCommandInstance());
+                processor.Execute();
+            }
+            catch (Exception ex) {
+                response = new ThrowHostSwitchExceptionCommand {
+                    OriginalException = ex
+                };
+            }
+
+            string requestFile = Path.GetFileName(requestPath);
+            string responseFilename = requestFile.Replace(".req.", ".res.");
+            string responsePath = Path.Combine(_config.BuildHostedResponsePath(), responseFilename);
+            File.WriteAllText(responsePath, (new CommandEnvelope(response)).ToJson());
         }
 
-        private void Reset() {
-            // delete files in request path
-
-            // delete files in response path
+        private void Reset(params string[] paths) {
+            // delete files in request and response paths
+            paths.ForEach(x => {
+                Directory.Delete(x, true);
+                Directory.CreateDirectory(x);
+            });
         }
     }
 
     public class FileSystemHostSwitchConfiguration {
+
+        public FileSystemHostSwitchConfiguration(string basePath) {
+            BasePath = basePath ?? AppDomain.CurrentDomain.BaseDirectory;
+            RequestPath = "Request";
+            ResponsePath = "Response";
+        }
+        
+        public string BasePath { get; set; }
         public string RequestPath { get; set; }
         public string ResponsePath { get; set; }
-        public HostController HostController { get; set; }
-        public PluginsController PluginsController { get; set; }
-
+        
         public virtual string BuildHostedRequestPath() {
-            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            string basePath = BasePath ?? AppDomain.CurrentDomain.BaseDirectory;
             return Path.Combine(basePath, RequestPath);
+        }
+
+        public virtual string BuildHostedResponsePath() {
+            string basePath = BasePath ?? AppDomain.CurrentDomain.BaseDirectory;
+            return Path.Combine(basePath, ResponsePath);
         }
     }
 }

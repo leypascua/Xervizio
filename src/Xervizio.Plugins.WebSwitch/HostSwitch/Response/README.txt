@@ -1,0 +1,1 @@
+﻿This folder contains serialized responses from executed commands 

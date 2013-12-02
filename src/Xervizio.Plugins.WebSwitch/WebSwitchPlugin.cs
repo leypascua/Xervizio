@@ -9,9 +9,11 @@ namespace Xervizio.Plugins.WebSwitch {
     using Hosting;
     using Infrastructure;
     using Xervizio.Plugins.WebSwitch.CommandProcessors;
+    using Xervizio.Plugins.WebSwitch.Services;
 
     public class WebSwitchPlugin : HostGateway {
         private WebApiHost _host;
+        private FileSystemHostSwitch _hostSwitch;
 
         public WebSwitchPlugin() {}
 
@@ -28,10 +30,13 @@ namespace Xervizio.Plugins.WebSwitch {
         }
 
         private void StartApiServer() {
-            
             string baseAddress = ConfigurationManager.AppSettings["baseAddress"];
             _host = new WebApiHost(baseAddress);
             _host.Start();
+
+            _hostSwitch = new FileSystemHostSwitch(new FileSystemHostSwitchConfiguration(ConfigurationManager.AppSettings["hostSwitchBasePath"]));
+            _hostSwitch.Start();
+
             HostContext.Logger.Info("WebSwitchPlugin started. ({0})", baseAddress);
         }
 
