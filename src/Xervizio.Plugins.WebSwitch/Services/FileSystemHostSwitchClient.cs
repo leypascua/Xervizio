@@ -51,7 +51,7 @@ namespace Xervizio.Plugins.WebSwitch.Services {
                 }
 
                 Protect.Against<TimeoutException>(retryCount == 2, "Execution of {0} timed out.", command.GetType().FullName);
-                Thread.Sleep(2000);
+                Thread.Sleep(10000);
                 retryCount++;
             }
 
