@@ -13,6 +13,7 @@ namespace Xervizio {
         ILogger Logger { get; }
         
         PluginData[] GetPlugins();
+        bool KeepAlive();
         void Shutdown();
         void Start();
         void StartPlugin(string pluginName);
@@ -48,6 +49,10 @@ namespace Xervizio {
 
         ILogger ServicePluginHost.Logger {
             get { return _logger; }
+        }
+
+        bool ServicePluginHost.KeepAlive() {
+            return true;
         }
 
         void ServicePluginHost.Start() {

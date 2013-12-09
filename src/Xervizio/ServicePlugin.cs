@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Xervizio {
 
@@ -28,6 +29,30 @@ namespace Xervizio {
     }
 
     public abstract class HostGateway : ServicePlugin {
-        public virtual ServicePluginHost HostContext { get; internal set; }
+        public virtual ServicePluginHost HostContext {
+            get { return _hostContext; }
+            internal set {
+                if (_hostContext == null) {
+                    SetHostContext(value);
+                }
+            }
+        }
+
+        private void SetHostContext(ServicePluginHost value) {            
+            //HACK: BAD CODE!!! I'm too lazy to study how to renew a lease for a remote 
+            //      object, so this is only good until it explodes!!!
+            
+            _hostContext = value;
+            Action keepAlive = () => {
+                while (true) {
+                    Thread.Sleep(8500);
+                    _hostContext.KeepAlive();                    
+                }
+            };
+
+            keepAlive.BeginInvoke(asyncResult => { }, _hostContext);
+        }
+
+        private ServicePluginHost _hostContext = null;
     }
 }
