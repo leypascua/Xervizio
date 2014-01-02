@@ -11,35 +11,30 @@ using Xervizio.Plugins.WebSwitch.Infrastructure;
 namespace Xervizio.Plugins.WebSwitch.Services {
     public class FileSystemHostSwitch {
         private FileSystemHostSwitchConfiguration _config;
-        private FileSystemWatcher _fsw;
+        private HostSwitchRequestMonitor _requestMonitor;
+        
 
         public FileSystemHostSwitch(FileSystemHostSwitchConfiguration config) {
             _config = config;
-            _fsw = new FileSystemWatcher(_config.BuildHostedRequestPath());
+            _requestMonitor = new HostSwitchRequestMonitor(config, FileSystemHostSwitchClient.REQUEST_EXTENSION_FILENAME);
         }
 
         public FileSystemHostSwitch Start() {
             Reset(_config.BuildHostedRequestPath(), _config.BuildHostedResponsePath());
-            _fsw.Filter = "*{0}".WithTokens(FileSystemHostSwitchClient.REQUEST_EXTENSION_FILENAME);
-            _fsw.Created += (sender, args) => ExecuteCommand(args.FullPath);
-            _fsw.EnableRaisingEvents = true;
+            _requestMonitor.RequestReceived += (s, e) => ExecuteCommand(e);
+            _requestMonitor.Enable();
             return this;
         }
 
-        private void ExecuteCommand(string requestPath) {
-            Thread.Sleep(100);
-
-            // deserialize file            
-            var envelope = CommandEnvelope.BuildFrom(File.ReadAllText(requestPath));
+        private void ExecuteCommand(HostSwitchRequestReceivedEventArgs e) {            
             ApplicationCommand response = new SuccessfulExecutionResponseCommand();
 
             // execute the command
-            try {
+            try {                
+                var envelope = CommandEnvelope.BuildFrom(e.RequestJson);
                 var processor = CommandRegistry.GetCommandProcesor(envelope.GetCommandInstance());
                 var commandContext = processor.Execute();
                 response.Message = commandContext.Result as string;
-                commandContext = null;
-                processor = null;
             }
             catch (Exception ex) {
                 response = new ThrowHostSwitchExceptionCommand {
@@ -47,7 +42,7 @@ namespace Xervizio.Plugins.WebSwitch.Services {
                 };
             }
 
-            string requestFile = Path.GetFileName(requestPath);
+            string requestFile = Path.GetFileName(e.FullPath);
             string responseFilename = requestFile.Replace(".req.", ".res.");
             string responsePath = Path.Combine(_config.BuildHostedResponsePath(), responseFilename);
             File.WriteAllText(responsePath, (new CommandEnvelope(response)).ToJson());
@@ -58,9 +53,12 @@ namespace Xervizio.Plugins.WebSwitch.Services {
             paths.ForEach(x => {
                 if (Directory.Exists(x)) {
                     Directory.Delete(x, true);
+
+                    // for some reason, Directory.CreateDirectory doesn't work if
+                    // the path deleted is open in Windows Explorer. This seems 
+                    // to do the trick.
+                    Thread.Sleep(500);
                 }
-                
-                Directory.CreateDirectory(x);
             });
         }
     }

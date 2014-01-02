@@ -86,6 +86,7 @@
     <Compile Include="Api\HostController.cs" />
     <Compile Include="Api\PluginsController.cs" />
     <Compile Include="Services\FileSystemHostSwitchClient.cs" />
+    <Compile Include="Services\HostSwitchRequestMonitor.cs" />
     <Compile Include="WebSwitchPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
