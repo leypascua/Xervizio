@@ -59,6 +59,8 @@ namespace Xervizio.Plugins.WebSwitch.Services {
                     // to do the trick.
                     Thread.Sleep(500);
                 }
+
+                Directory.CreateDirectory(x);
             });
         }
     }
