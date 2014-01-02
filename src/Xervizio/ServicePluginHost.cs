@@ -59,6 +59,7 @@ namespace Xervizio {
             // locate and enumerate plugins from plugin directory
             var plugins = _pluginFactory.GetPlugins().ToList();
 
+            _logger.Info("[********** Starting Service Plugin Host **********]");
             _logger.Info("Found {0} plugin(s).", plugins.Count);
 
             foreach (var plugin in plugins) {
@@ -96,7 +97,7 @@ namespace Xervizio {
         }
 
         void ServicePluginHost.Shutdown() {
-            Action performShutdown = () => {
+            Action performShutdown = () => {                
                 _logger.Warn("Commencing shutdown in 5 seconds");
                 Thread.Sleep(5000);
                 ShutdownCompletely();
@@ -113,6 +114,7 @@ namespace Xervizio {
                 StopPlugin(plugin);
             }
 
+            _logger.Info("[********** Shutting Down Service Plugin Host **********]");
             _shutdownHost();
         }
 
