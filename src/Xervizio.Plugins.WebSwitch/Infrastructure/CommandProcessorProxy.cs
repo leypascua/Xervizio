@@ -15,15 +15,17 @@ namespace Xervizio.Plugins.WebSwitch.Infrastructure {
                 "Processor must implement ICommandProcessor");
 
             _processor = commandProcessor;
+            _processor.Context = new CommandContext();
             _args = args;
         }
 
-        public virtual void Execute() {
+        public virtual CommandContext Execute() {
             Type commandType = _args.GetType();
             Type commandProcessorGenericType = typeof(ICommandProcessor<>).MakeGenericType(commandType);
             var method = commandProcessorGenericType.GetMethod("Process");
             try {
                 method.Invoke(_processor, new[] { _args });
+                return _processor.Context;
             }
             catch (TargetInvocationException ex) {
                 throw ex.InnerException;

@@ -11,5 +11,6 @@ namespace Xervizio.Plugins.WebSwitch.Infrastructure {
         }
 
         public virtual Guid Id { get; private set; }
+        public virtual string Message { get; set; }
     }
 }

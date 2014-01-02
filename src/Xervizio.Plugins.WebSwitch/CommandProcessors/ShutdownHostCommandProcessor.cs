@@ -9,12 +9,15 @@ namespace Xervizio.Plugins.WebSwitch.CommandProcessors {
     public class ShutdownHostCommandProcessor : ICommandProcessor<ShutdownHostCommand> {
         private ServicePluginHost _host;
 
+        public CommandContext Context { get; set; }
+
         public ShutdownHostCommandProcessor(ServicePluginHost host) {
             _host = host;
         }
         
         public void Process(ShutdownHostCommand args) {
             _host.Shutdown();
+            Context.Result = "Xervizio Service Host is Shutting Down...";
         }
     }
 }

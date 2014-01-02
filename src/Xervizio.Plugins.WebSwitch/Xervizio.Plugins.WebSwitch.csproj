@@ -74,6 +74,7 @@
     <Compile Include="Commands\ThrowHostSwitchExceptionCommand.cs" />
     <Compile Include="Hosting\WebApiHost.cs" />
     <Compile Include="Infrastructure\ApplicationCommand.cs" />
+    <Compile Include="Infrastructure\CommandContext.cs" />
     <Compile Include="Infrastructure\CommandEnvelope.cs" />
     <Compile Include="Infrastructure\CommandProcessorProxy.cs" />
     <Compile Include="Infrastructure\CommandRegistry.cs" />

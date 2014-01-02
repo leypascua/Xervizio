@@ -59,7 +59,7 @@ namespace Xervizio.Plugins.WebSwitch.Remote {
                 { typeof(StopPluginCommand).ToQualifiedAssemblyName(), () => new StopPluginCommand { PluginName = Program.PluginName } },
             };
             
-            _client.ExecuteCommand(createCommand[commandName]());
+            Console.WriteLine(_client.ExecuteCommand(createCommand[commandName]()));
         }
 
         private static void PrintBanner() {

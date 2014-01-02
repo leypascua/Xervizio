@@ -36,7 +36,8 @@ namespace Xervizio.Plugins.WebSwitch.Services {
             // execute the command
             try {
                 var processor = CommandRegistry.GetCommandProcesor(envelope.GetCommandInstance());
-                processor.Execute();
+                var commandContext = processor.Execute();
+                response.Message = commandContext.Result as string;
             }
             catch (Exception ex) {
                 response = new ThrowHostSwitchExceptionCommand {
@@ -53,7 +54,10 @@ namespace Xervizio.Plugins.WebSwitch.Services {
         private void Reset(params string[] paths) {
             // delete files in request and response paths
             paths.ForEach(x => {
-                Directory.Delete(x, true);
+                if (Directory.Exists(x)) {
+                    Directory.Delete(x, true);
+                }
+                
                 Directory.CreateDirectory(x);
             });
         }

@@ -5,9 +5,11 @@ using System.Text;
 
 namespace Xervizio.Plugins.WebSwitch.Infrastructure {
 
-    public interface CommandProcessor { }
+    public interface CommandProcessor {
+        CommandContext Context { get; set; }
+    }
     
-    public interface ICommandProcessor<T> : CommandProcessor where T : ApplicationCommand {
+    public interface ICommandProcessor<T> : CommandProcessor where T : ApplicationCommand {        
         void Process(T args);
     }
 }

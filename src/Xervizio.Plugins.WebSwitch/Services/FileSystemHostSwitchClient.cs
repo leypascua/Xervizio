@@ -18,7 +18,7 @@ namespace Xervizio.Plugins.WebSwitch.Services {
             _config = config;
         }
 
-        public virtual void ExecuteCommand(ApplicationCommand command) {
+        public virtual string ExecuteCommand(ApplicationCommand command) {
             var envelope = new CommandEnvelope(command);
             string requestId = "[{0}@{1}]{2}.{3}".WithTokens(
                 Environment.UserName, Environment.MachineName, command.GetType().Name, DateTime.UtcNow.ToString("yyyyMMddThhmmssfff"));
@@ -40,17 +40,13 @@ namespace Xervizio.Plugins.WebSwitch.Services {
             // wait for response
             int retryCount = 0;
             while (!ResponseReceived(responseFilePath)) {
-                if (command is ShutdownHostCommand) {
-                    return;
-                }
-
                 Protect.Against<TimeoutException>(retryCount == 10, "Execution of {0} timed out.", command.GetType().FullName);
                 Thread.Sleep(1000 * 3); // retry every 3 seconds
                 retryCount++;
             }
 
             // deserialize response
-            DeserializeResponse(responseFilePath, command);
+            return DeserializeResponse(responseFilePath, command);
         }
 
         private bool ResponseReceived(string responseFilePath) {
@@ -61,15 +57,21 @@ namespace Xervizio.Plugins.WebSwitch.Services {
             File.WriteAllText(requestFilePath, envelope.ToJson());
         }
 
-        private void DeserializeResponse(string responseFilePath, ApplicationCommand command) {
+        private string DeserializeResponse(string responseFilePath, ApplicationCommand command) {
             string json = File.ReadAllText(responseFilePath);
             bool isShutdownCommand = command is ShutdownHostCommand;
             bool rethrowError = json.Contains(typeof(ThrowHostSwitchExceptionCommand).FullName) && !isShutdownCommand;
-
+            var envelope = CommandEnvelope.BuildFrom(json);
+    
             if (rethrowError) {
-                var error = json.DeserializeFromJsonAs<ThrowHostSwitchExceptionCommand>();
+                var error = envelope.UnpackCommandInstance<ThrowHostSwitchExceptionCommand>();
                 throw error.OriginalException;
             }
+                        
+            var response = envelope.UnpackCommandInstance<SuccessfulExecutionResponseCommand>();
+            string result = response.Message ?? string.Empty;
+
+            return result;
         }
     }
 }

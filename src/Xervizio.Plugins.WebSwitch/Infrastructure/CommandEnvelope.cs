@@ -26,5 +26,9 @@ namespace Xervizio.Plugins.WebSwitch.Infrastructure {
             var instance = CommandJson.DeserializeFromJsonAs(commandType);
             return (ApplicationCommand)instance;
         }
+
+        public virtual TCmd UnpackCommandInstance<TCmd>() where TCmd : ApplicationCommand {
+            return (TCmd)GetCommandInstance();
+        }
     }
 }
