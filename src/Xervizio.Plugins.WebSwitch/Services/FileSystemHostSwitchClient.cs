@@ -30,33 +30,31 @@ namespace Xervizio.Plugins.WebSwitch.Services {
             // build response file name
             // format: [{username}@{host}].{yyyyMMddThhmmssnnn}.res.xvzio
             string responseFilename = "{0}.res{1}".WithTokens(requestId, REQUEST_EXTENSION_FILENAME);
-
-            // start file system watcher on the response path
-            string responseFilePath = string.Empty;
+                                    
             string responsePath = _config.BuildHostedResponsePath();
-            var fsw = new FileSystemWatcher(responsePath, responseFilename);
-            fsw.Created += (sender, args) => {
-                responseFilePath = args.FullPath;
-            };
-            fsw.EnableRaisingEvents = true;
+            string responseFilePath = Path.Combine(responsePath, responseFilename);
 
             // serialize command
             SerializeAndSend(envelope, Path.Combine(_config.BuildHostedRequestPath(), requestFilename));
 
             // wait for response
             int retryCount = 0;
-            while (responseFilePath.IsNullOrEmpty()) {
+            while (!ResponseReceived(responseFilePath)) {
                 if (command is ShutdownHostCommand) {
                     return;
                 }
 
-                Protect.Against<TimeoutException>(retryCount == 2, "Execution of {0} timed out.", command.GetType().FullName);
-                Thread.Sleep(10000);
+                Protect.Against<TimeoutException>(retryCount == 10, "Execution of {0} timed out.", command.GetType().FullName);
+                Thread.Sleep(1000 * 3); // retry every 3 seconds
                 retryCount++;
             }
 
             // deserialize response
             DeserializeResponse(responseFilePath, command);
+        }
+
+        private bool ResponseReceived(string responseFilePath) {
+            return File.Exists(responseFilePath);
         }
 
         private void SerializeAndSend(CommandEnvelope envelope, string requestFilePath) {
