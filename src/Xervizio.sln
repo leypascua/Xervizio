@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSwitch", "WebSwitch", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xervizio.Plugins.WebSwitch.Remote", "Xervizio.Plugins.WebSwitch.Remote\Xervizio.Plugins.WebSwitch.Remote.csproj", "{C5E57AE7-A497-4B71-BF3E-D889E617BF4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreeNova.AppMonitor", "GreeNova.AppMonitor\GreeNova.AppMonitor.csproj", "{1E0B42A2-4B3C-4E5D-9E33-1AFE394EC062}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,13 +50,18 @@ Global
 		{C5E57AE7-A497-4B71-BF3E-D889E617BF4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5E57AE7-A497-4B71-BF3E-D889E617BF4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5E57AE7-A497-4B71-BF3E-D889E617BF4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E0B42A2-4B3C-4E5D-9E33-1AFE394EC062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E0B42A2-4B3C-4E5D-9E33-1AFE394EC062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E0B42A2-4B3C-4E5D-9E33-1AFE394EC062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E0B42A2-4B3C-4E5D-9E33-1AFE394EC062}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{06992E88-3436-4282-8916-B5E834A88BE0} = {61F35464-6166-4CF8-BA6B-D9C5DE8107BD}
 		{102FD99B-75AA-460F-B453-E140F4CAC787} = {61F35464-6166-4CF8-BA6B-D9C5DE8107BD}
+		{06992E88-3436-4282-8916-B5E834A88BE0} = {61F35464-6166-4CF8-BA6B-D9C5DE8107BD}
+		{1E0B42A2-4B3C-4E5D-9E33-1AFE394EC062} = {61F35464-6166-4CF8-BA6B-D9C5DE8107BD}
 		{BCFE6B3C-DE27-4E8C-BBB2-B7A24F72CEB3} = {102FD99B-75AA-460F-B453-E140F4CAC787}
 		{C5E57AE7-A497-4B71-BF3E-D889E617BF4B} = {102FD99B-75AA-460F-B453-E140F4CAC787}
 	EndGlobalSection
