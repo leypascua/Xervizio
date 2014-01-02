@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using GreeNova.AppMonitor.Configuration;
 using System.ComponentModel;
+using System.Threading;
 
 namespace GreeNova.AppMonitor.Infrastructure {
     
@@ -30,15 +31,21 @@ namespace GreeNova.AppMonitor.Infrastructure {
                         onError(item, ex);
                     }
                 };
-                
+
                 workers.Add(worker);
                 worker.RunWorkerAsync();
             }
 
-            while (true) {
-                if (!workers.Any(x => x.IsBusy))
-                    break;
+            while (workers.Any(x => x.IsBusy)) {
+                Thread.Sleep(300);
             }
+
+            foreach (var worker in workers) {
+                worker.Dispose();
+            }
+
+            workers.Clear();            
+            workers = null;
         }
         
 

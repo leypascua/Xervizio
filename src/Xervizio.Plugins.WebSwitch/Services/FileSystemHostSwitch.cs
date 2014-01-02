@@ -27,7 +27,7 @@ namespace Xervizio.Plugins.WebSwitch.Services {
         }
 
         private void ExecuteCommand(string requestPath) {
-            Thread.Sleep(200);
+            Thread.Sleep(100);
 
             // deserialize file            
             var envelope = CommandEnvelope.BuildFrom(File.ReadAllText(requestPath));
@@ -38,6 +38,8 @@ namespace Xervizio.Plugins.WebSwitch.Services {
                 var processor = CommandRegistry.GetCommandProcesor(envelope.GetCommandInstance());
                 var commandContext = processor.Execute();
                 response.Message = commandContext.Result as string;
+                commandContext = null;
+                processor = null;
             }
             catch (Exception ex) {
                 response = new ThrowHostSwitchExceptionCommand {

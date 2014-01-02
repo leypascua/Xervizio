@@ -48,11 +48,10 @@ namespace GreeNova.AppMonitor {
 
         private static void StartAppMonitor() {
             Console.WriteLine("Starting AppMonitor...");
-            var monitorRunner = new MonitorRunner(AppMonitorConfiguration.Current);            
-
+            
             while (true) {
                 try {
-                    monitorRunner.Run(OnMonitorStarted, OnMonitorError);
+                    RunAppMonitor();
                 }
                 catch (Exception ex) {
                     Logger.Fatal("AppMonitor failed.", ex);
@@ -61,6 +60,12 @@ namespace GreeNova.AppMonitor {
 
                 Thread.Sleep(1000 * AppMonitorConfiguration.Current.CheckIntervalInSeconds);
             }
+        }
+
+        private static void RunAppMonitor() {
+            var monitorRunner = new MonitorRunner(AppMonitorConfiguration.Current);
+            monitorRunner.Run(OnMonitorStarted, OnMonitorError);
+            monitorRunner = null;
         }
 
         public static void OnMonitorStarted(MonitorTargetItem item) {
