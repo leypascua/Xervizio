@@ -6,12 +6,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using GreeNova.AppMonitor.Configuration;
-using GreeNova.AppMonitor.Infrastructure;
+using Xervizio.Plugins.AppMonitor.Configuration;
+using Xervizio.Plugins.AppMonitor.Infrastructure;
 using log4net;
 using Xervizio;
 
-namespace GreeNova.AppMonitor {
+namespace Xervizio.Plugins.AppMonitor {
     public class AppMonitorServicePlugin : ServicePlugin {
 
         private readonly static ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);        

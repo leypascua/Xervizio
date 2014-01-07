@@ -6,12 +6,12 @@ using System.Net;
 using System.Web;
 using System.Reflection;
 using log4net;
-using GreeNova.AppMonitor.Helpers;
+using Xervizio.Plugins.AppMonitor.Helpers;
 using System.IO;
-using GreeNova.AppMonitor.Configuration;
+using Xervizio.Plugins.AppMonitor.Configuration;
 using System.Net.Mail;
 
-namespace GreeNova.AppMonitor.Infrastructure {
+namespace Xervizio.Plugins.AppMonitor.Infrastructure {
     
     public class AppMonitor {
 

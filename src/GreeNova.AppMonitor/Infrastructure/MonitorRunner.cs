@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GreeNova.AppMonitor.Configuration;
+using Xervizio.Plugins.AppMonitor.Configuration;
 using System.ComponentModel;
 using System.Threading;
 
-namespace GreeNova.AppMonitor.Infrastructure {
+namespace Xervizio.Plugins.AppMonitor.Infrastructure {
     
     public class MonitorRunner {
 

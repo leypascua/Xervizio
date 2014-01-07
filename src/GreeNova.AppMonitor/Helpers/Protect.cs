@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
-namespace GreeNova.AppMonitor.Helpers {
+namespace Xervizio.Plugins.AppMonitor.Helpers {
 
     public static class Protect {
 

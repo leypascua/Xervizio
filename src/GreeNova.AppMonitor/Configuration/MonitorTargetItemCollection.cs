@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Configuration;
 
-namespace GreeNova.AppMonitor.Configuration {
+namespace Xervizio.Plugins.AppMonitor.Configuration {
     public class MonitorTargetItemCollection : ConfigurationElementCollection {
 
         public MonitorTargetItem this[int index] {

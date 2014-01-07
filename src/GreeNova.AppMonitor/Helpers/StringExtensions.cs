@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 
-namespace GreeNova.AppMonitor.Helpers {
+namespace Xervizio.Plugins.AppMonitor.Helpers {
     public static class StringExtensions {
 
         public static bool IsNullOrEmpty(this string arg) {

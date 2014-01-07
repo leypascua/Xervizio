@@ -7,8 +7,8 @@
     <ProjectGuid>{1E0B42A2-4B3C-4E5D-9E33-1AFE394EC062}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GreeNova.AppMonitor</RootNamespace>
-    <AssemblyName>GreeNova.AppMonitor</AssemblyName>
+    <RootNamespace>Xervizio.Plugins.AppMonitor</RootNamespace>
+    <AssemblyName>Xervizio.Plugins.AppMonitor</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
