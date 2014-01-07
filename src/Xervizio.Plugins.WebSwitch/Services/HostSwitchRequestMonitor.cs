@@ -4,59 +4,34 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Timers;
+using Xervizio.Utils;
 
 namespace Xervizio.Plugins.WebSwitch.Services {
     
     public class HostSwitchRequestMonitor {
-        private FileSystemHostSwitchConfiguration _config;
-        private string _extensionFilename;
-        private Timer _timer;
-
+        
         public HostSwitchRequestMonitor(FileSystemHostSwitchConfiguration config, string extensionFilename) {
-            _config = config;
-            _hostedRequestPath = _config.BuildHostedRequestPath();
-            _filterPattern = "*{0}".WithTokens(extensionFilename);
-            _extensionFilename = extensionFilename;
-            _timer = new Timer(150);
-            _timer.Elapsed += OnTimerElapsed;
-            RequestReceived += (s, e) => { };
+            _messageMonitor = new FileSystemMessageMonitor(config.BuildHostedRequestPath(), "*{0}".WithTokens(extensionFilename), 250);
+            _messageMonitor.OnMessageReceived += OnMessageReceived;
         }
 
-        public event HostSwitchRequestReceivedEvent RequestReceived;
-        private string _filterPattern;
-        private string _hostedRequestPath;
+        public event HostSwitchRequestReceivedEvent RequestReceived;        
 
         public HostSwitchRequestMonitor Enable() {
-            RunTimer(_timer, true);
+            _messageMonitor.Enable();
             return this;
         }
 
-        private void OnTimerElapsed(object sender, ElapsedEventArgs e) {
-            Timer t = (Timer)sender;
-            RunTimer(t, false);
-
-            var requestFiles = Directory.EnumerateFiles(_hostedRequestPath, _filterPattern);
-            foreach (var file in requestFiles) {
-                if (!file.Contains(".req.")) continue;
-                string fullPath = Path.Combine(_hostedRequestPath, file);
-                string requestJson = File.ReadAllText(fullPath);
-                RequestReceived(this, new HostSwitchRequestReceivedEventArgs(fullPath, requestJson));
-                File.Delete(file);
-            }
-
-            RunTimer(t, true);
-        }
-
-        private void RunTimer(Timer t, bool start) {
-            t.Enabled = start;
-
-            if (start) {
-                t.Start();
-            }
-            else {
-                t.Stop();
+        private void OnMessageReceived(object sender, MessageReceivedEventArgs e) {
+            if (RequestReceived == null) return;
+            if (!e.FileData.Name.Contains(".req.")) return;
+            using (var txtReader = e.FileData.OpenText()) {
+                RequestReceived(this, new HostSwitchRequestReceivedEventArgs(e.FileData.FullName, txtReader.ReadToEnd()));
             }
         }
+        
+        private FileSystemMessageMonitor _messageMonitor;
+        
     }
 
     public delegate void HostSwitchRequestReceivedEvent(object sender, HostSwitchRequestReceivedEventArgs e);
