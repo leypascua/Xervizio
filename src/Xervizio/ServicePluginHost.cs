@@ -45,6 +45,10 @@ namespace Xervizio {
             _logger = logger;
             _pluginFactory = pluginFactory;
             _shutdownHost = shutdownHost;
+            _messageMonitor = new FileSystemMessageMonitor(filterExpression: "host.shutdown");
+            _messageMonitor.OnMessageReceived += (s, e) => {
+                ((ServicePluginHost)this).Shutdown();
+            };
         }
 
         ILogger ServicePluginHost.Logger {
@@ -56,6 +60,11 @@ namespace Xervizio {
         }
 
         void ServicePluginHost.Start() {
+            if (_configuration.ShutdownBackdoorEnabled) {
+                _logger.Warn("Shutdown backdoor is enabled. Monitoring for the existence of 'host.shutdown' file.");
+                _messageMonitor.Enable();
+            }
+            
             // locate and enumerate plugins from plugin directory
             var plugins = _pluginFactory.GetPlugins().ToList();
 
@@ -103,6 +112,7 @@ namespace Xervizio {
                 ShutdownCompletely();
             };
 
+            _messageMonitor.Disable();
             performShutdown.BeginInvoke(new AsyncCallback(ar => {}), null);
         }
 
@@ -152,5 +162,6 @@ namespace Xervizio {
 
         private IDictionary<string, HostedPlugin> _validPlugins = new Dictionary<string, HostedPlugin>();
         private Action _shutdownHost;
+        private FileSystemMessageMonitor _messageMonitor;
     }
 }

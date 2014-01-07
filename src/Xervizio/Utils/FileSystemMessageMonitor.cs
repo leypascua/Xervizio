@@ -13,7 +13,7 @@ namespace Xervizio.Utils {
     public class FileSystemMessageMonitor {
 
         public FileSystemMessageMonitor(string pathToWatch = "", string filterExpression = "*.*", int pollingInterval = 1000) {
-            PathToWatch = pathToWatch.GetValueOrDefault(AppDomain.CurrentDomain.BaseDirectory);
+            PathToWatch = pathToWatch.IsNullOrEmpty() ? AppDomain.CurrentDomain.BaseDirectory : pathToWatch;
             FilterExpression = filterExpression;
             PollingInterval = pollingInterval;            
         }
@@ -37,7 +37,7 @@ namespace Xervizio.Utils {
 
         public virtual void Disable() {
             if (_timer.IsNull()) return;
-            _timer.Stop();
+            _timer.Stop();            
             _timer.Dispose();
             _timer = null;
         }
