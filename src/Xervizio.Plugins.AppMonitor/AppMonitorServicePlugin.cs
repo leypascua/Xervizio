@@ -21,6 +21,9 @@ namespace Xervizio.Plugins.AppMonitor {
             Console.WriteLine("GreeNova AppMonitor(TM)");
             Console.WriteLine("Copyright (C) 2012 GreeNova Philippines Inc. All rights reserved. \n\n");
 
+            // make sure configuration is correctly setup
+            var config = AppMonitorConfiguration.Current;
+
             _worker = new BackgroundWorker {
                 WorkerSupportsCancellation = true
             };

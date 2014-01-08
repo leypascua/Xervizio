@@ -8,11 +8,17 @@ namespace Xervizio.Plugins.AppMonitor.Configuration {
     
     public class AppMonitorConfiguration : ConfigurationSection {
 
-        static AppMonitorConfiguration() {
-            Current = ConfigurationManager.GetSection("appMonitor") as AppMonitorConfiguration;
-        }
+        public static AppMonitorConfiguration Current {
+            get {
+                if (_current.IsNull()) {
+                    lock (_syncLock) {
+                        _current = ConfigurationManager.GetSection("appMonitor") as AppMonitorConfiguration;
+                    }
+                }
 
-        public static AppMonitorConfiguration Current { get; private set; }
+                return _current;
+            }
+        }
 
         [ConfigurationProperty(MONITORMAILSENDER_KEY, IsRequired = true)]
         public string MonitorMailSender {
@@ -38,5 +44,8 @@ namespace Xervizio.Plugins.AppMonitor.Configuration {
         const string MONITORMAILSENDER_KEY = "monitorMailSender";
         const string TARGETS_KEY = "targets";
         const string CHECKINTERVALINSECONDS_KEY = "checkIntervalInSeconds";
+        private static AppMonitorConfiguration _current = null;
+        private static object _syncLock = new object();
+
     }
 }
