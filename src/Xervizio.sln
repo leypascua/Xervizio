@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSwitch", "WebSwitch", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xervizio.Plugins.WebSwitch.Remote", "Xervizio.Plugins.WebSwitch.Remote\Xervizio.Plugins.WebSwitch.Remote.csproj", "{C5E57AE7-A497-4B71-BF3E-D889E617BF4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xervizio.Plugins.AppMonitor", "GreeNova.AppMonitor\Xervizio.Plugins.AppMonitor.csproj", "{1E0B42A2-4B3C-4E5D-9E33-1AFE394EC062}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xervizio.Plugins.AppMonitor", "Xervizio.Plugins.AppMonitor\Xervizio.Plugins.AppMonitor.csproj", "{1E0B42A2-4B3C-4E5D-9E33-1AFE394EC062}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
