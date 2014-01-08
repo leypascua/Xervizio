@@ -12,6 +12,7 @@ namespace Xervizio.Configuration {
         string ServiceDescription { get; set; }
         string PluginLocation { get; set; }
         bool ShutdownBackdoorEnabled { get; set; }
+        bool IsOnline { get; }
     }
 
     public static class XervizioConfigurationExtensions {
@@ -99,10 +100,21 @@ namespace Xervizio.Configuration {
             }
         }
 
+        [ConfigurationProperty(ISONLINE_CONFIGKEY, DefaultValue = true)]
+        public bool IsOnline {
+            get {
+                return bool.Parse(base[ISONLINE_CONFIGKEY].ToString());
+            }
+            set {
+                base[ISONLINE_CONFIGKEY] = value;
+            }
+        }
+
         const string SERVICENAME_CONFIGKEY = "serviceName";
         const string DISPLAYNAME_CONFIGKEY = "displayName";
         const string SERVICEDESCRIPTION_CONFIGKEY = "serviceDescription";
         const string PLUGINLOCATION_CONFIGKEY = "pluginLocation";
         const string SHUTDOWNBACKDOORENABLED_CONFIGKEY = "shutdownBackdoorEnabled";
+        const string ISONLINE_CONFIGKEY = "isOnline";
     }
 }

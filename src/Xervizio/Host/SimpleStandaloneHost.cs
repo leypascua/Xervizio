@@ -9,6 +9,11 @@ using Xervizio.Utils;
 namespace Xervizio.Host {
     public class SimpleStandaloneHost {
         public static void Start(XervizioConfiguration config, ILogger logger) {
+            if (!config.IsOnline) {
+                logger.Info("Service Plugin Host is Offline. Stopping Service.");
+                return;
+            }
+            
             HostFactory.Run(host => {
                 host.Service<ServicePluginHost>(s => {
                     s.ConstructUsing(name => CreatePluginHost(config, logger));
